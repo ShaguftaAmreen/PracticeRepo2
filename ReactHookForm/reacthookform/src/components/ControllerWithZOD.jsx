@@ -1,31 +1,29 @@
-import React from 'react';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import { useForm, Controller } from 'react-hook-form';
+import React from "react";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import { useForm, Controller } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const schema = z.object({
   email: z
     .string()
     .nonempty("Email is required")
     .email("Invalid email address"),
- name: z
+  name: z
     .string()
     .nonempty("Name is required")
     .min(4, "Name must be at least 4 characters long")
-    .regex(/[A-Z]/, "Name must include at least one uppercase letter")
-    ,
- age: z
- .string()
-  .transform((val) => Number(val)) // Convert input to a number
-  .refine((val) => !isNaN(val), { message: "Age must be a valid number" }) // Ensure valid number
-  .refine((val) => val > 18, { message: "Age must be greater than 18" }) // Custom check for >18
-  .refine((val) => val < 40, { message: "Age must be less than 40" }),
-    
+    .regex(/[A-Z]/, "Name must include at least one uppercase letter"),
+  age: z
+    .string()
+    .transform((val) => Number(val)) // Convert input to a number
+    .refine((val) => !isNaN(val), { message: "Age must be a valid number" }) // Ensure valid number
+    .refine((val) => val > 18, { message: "Age must be greater than 18" }) // Custom check for >18
+    .refine((val) => val < 40, { message: "Age must be less than 40" }),
+
   password: z
     .string()
     .nonempty("Password is required")
@@ -33,9 +31,11 @@ const schema = z.object({
     .min(8, "Password must be at least 8 characters long")
     .regex(/[A-Z]/, "Password must include at least one uppercase letter")
     .regex(/\d/, "Password must include at least one number")
-    .regex(/[@$!%*?&]/, "Password must include at least one special characterghjkl"),
+    .regex(
+      /[@$!%*?&]/,
+      "Password must include at least one special characterghjkl"
+    ),
 });
-
 
 // type FormData = z.infer<typeof schema>;
 
@@ -43,15 +43,14 @@ const schema = z.object({
 //     email: string;
 //     password: string;
 //   };
-  
+
 // hello
 const MuirhfController = () => {
   const { control, handleSubmit, formState } = useForm({
-    resolver: zodResolver(schema), 
+    resolver: zodResolver(schema),
   });
   const { isSubmitting, errors } = formState;
 
-  
   const onSubmit = async (data) => {
     await new Promise((resolve) => setTimeout(resolve, 4000)); // Simulating delay
     console.log(data);
@@ -78,7 +77,7 @@ const MuirhfController = () => {
             )}
           />
           {/*Name field*/}
-            <Controller
+          <Controller
             name="name"
             control={control}
             defaultValue=""
@@ -122,7 +121,7 @@ const MuirhfController = () => {
               />
             )}
           />
-          
+
           {/* Submit Button */}
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? "Logging in" : "Login"}
@@ -131,7 +130,6 @@ const MuirhfController = () => {
       </form>
       <DevTool control={control} />
       <p>It&apos;s a beautiful day!</p>
-
     </div>
   );
 };
