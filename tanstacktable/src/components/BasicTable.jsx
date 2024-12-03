@@ -7,7 +7,7 @@ import {
   getCoreRowModel,
 } from '@tanstack/react-table';
 
-
+// Fetch data from server with sorting and pagination parameters
 const fetchPosts = async ({ queryKey }) => {
   const [{ pageIndex, pageSize, sortBy, sortOrder }] = queryKey;
   const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
@@ -173,6 +173,9 @@ const BasicTable = () => {
 };
 
 export default BasicTable;
+
+
+
 
 
 
