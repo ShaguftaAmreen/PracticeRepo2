@@ -30,3 +30,16 @@ const [searchTerm, setSearchTerm] = useState('');
   const removeFromCart = (id) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
   };
+
+
+//dynamic placeholder
+
+{header.column.getCanFilter() && (
+  <input
+    type="text"
+    value={header.column.getFilterValue() || ''}
+    onChange={(e) => header.column.setFilterValue(e.target.value)}
+    placeholder={`Filter ${header.column.id}`}
+    className="mt-2 w-full px-2 py-1 border rounded"
+  />
+)}

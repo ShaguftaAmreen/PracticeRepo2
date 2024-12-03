@@ -50,7 +50,7 @@ const TanStackTable = () => {
     });
   
 
-  return (
+  return(
     <div>
     <h1 className="text-lg font-bold mb-4">TanStack React Table Example</h1>
       <table className="min-w-full border-collapse border border-gray-300">

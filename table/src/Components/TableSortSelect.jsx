@@ -83,12 +83,14 @@ function TableSortSelect() {
   const [search, setSearch] = useState("");
 
   // Debounce the search input
+
   const debouncedSearch = useDebounceValue(search, 500);
 
   const fetchProducts = async ({ queryKey }) => {
     const skip = page * rowsPerPage;
 
     // If there's a search query, fetch search results, otherwise fetch paginated products
+
     const url = search
       ? `https://dummyjson.com/products/search?q=${search}`
       : `https://dummyjson.com/products`;
@@ -121,7 +123,7 @@ function TableSortSelect() {
       }
     }
     if (isSuccess) {
-      successToast = toast.success("successful!");
+      successToast = toast.success("successful!")
     }
     if (error) {
       errorToast = toast.error("Error 🤷‍♂️");
