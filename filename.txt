@@ -1,0 +1,32 @@
+const [searchTerm, setSearchTerm] = useState('');
+  const [cart, setCart] = useState([]);
+
+
+
+
+  // Filter products based on the search term
+
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+
+
+
+
+
+  // Add product to the cart
+
+  const addToCart = (product) => {
+    setCart((prevCart) => [...prevCart, product]);
+  };
+
+
+
+
+
+  // Remove product from the cart
+
+  const removeFromCart = (id) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== id));
+  };
