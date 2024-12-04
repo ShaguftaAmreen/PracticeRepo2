@@ -1,13 +1,13 @@
-import React, { useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import React, { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import {
   useReactTable,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-} from '@tanstack/react-table';
-import { useDebounceValue } from 'usehooks-ts';
+} from "@tanstack/react-table";
+import { useDebounceValue } from "usehooks-ts";
 
 const fetchPosts = async ({ queryKey }) => {
   console.log("inside fetchposts", queryKey);
@@ -20,14 +20,16 @@ const fetchPosts = async ({ queryKey }) => {
     _order: sortOrder,
   };
 
-  // Apply filters to the query params
   filters.forEach(({ id, value }) => {
     if (value) params[id] = value;
   });
 
-  const response = await axios.get("https://jsonplaceholder.typicode.com/posts",{
-    params,
-  });
+  const response = await axios.get(
+    "https://jsonplaceholder.typicode.com/posts",
+    {
+      params,
+    }
+  );
 
   return {
     data: response.data,
@@ -39,21 +41,21 @@ const BasicTable = () => {
   const [tableParams, setTableParams] = useState({
     pageIndex: 0,
     pageSize: 5,
-    sortBy: 'id',
-    sortOrder: 'asc',
+    sortBy: "id",
+    sortOrder: "asc",
   });
-
-  // Local state to manage filter values (e.g., search terms)
   const [filters, setFilters] = useState([
-    { id: 'id', value: '' },
-    { id: 'userId', value: '' },
-    { id: 'title', value: '' },
+    { id: "id", value: "" },
+    { id: "userId", value: "" },
+    { id: "title", value: "" },
   ]);
 
   const [columnVisibility, setColumnVisibility] = useState({});
 
-  
-  const [debouncedFilters, setDebouncedFilters] = useDebounceValue(filters, 500);
+  const [debouncedFilters, setDebouncedFilters] = useDebounceValue(
+    filters,
+    600
+  );
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: [tableParams, debouncedFilters],
@@ -64,19 +66,19 @@ const BasicTable = () => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'id',
-        header: 'ID',
-        filterFn: 'includesString',
+        accessorKey: "id",
+        header: "ID",
+        filterFn: "includesString",
       },
       {
-        accessorKey: 'userId',
-        header: 'User ID',
-        filterFn: 'includesString',
+        accessorKey: "userId",
+        header: "User ID",
+        filterFn: "includesString",
       },
       {
-        accessorKey: 'title',
-        header: 'Title',
-        filterFn: 'includesString',
+        accessorKey: "title",
+        header: "Title",
+        filterFn: "includesString",
       },
     ],
     []
@@ -90,7 +92,9 @@ const BasicTable = () => {
         pageIndex: tableParams.pageIndex,
         pageSize: tableParams.pageSize,
       },
-      sorting: [{ id: tableParams.sortBy, desc: tableParams.sortOrder === 'desc' }],
+      sorting: [
+        { id: tableParams.sortBy, desc: tableParams.sortOrder === "desc" },
+      ],
       columnVisibility,
       columnFilters: debouncedFilters,
     },
@@ -103,37 +107,41 @@ const BasicTable = () => {
     onPaginationChange: (updater) => {
       setTableParams((prev) => ({
         ...prev,
-        ...(typeof updater === 'function' ? updater(prev) : updater),
+        ...(typeof updater === "function" ? updater(prev) : updater),
       }));
     },
     onSortingChange: (updater) => {
       setTableParams((prev) => {
-        const newSorting = typeof updater === 'function' ? updater(prev.sorting) : updater;
+        const newSorting =
+          typeof updater === "function" ? updater(prev.sorting) : updater;
         return {
           ...prev,
           sortBy: newSorting[0]?.id || prev.sortBy,
-          sortOrder: newSorting[0]?.desc ? 'desc' : 'asc',
+          sortOrder: newSorting[0]?.desc ? "desc" : "asc",
         };
       });
     },
-    onColumnFiltersChange: setFilters, // Update filters on column change
+    onColumnFiltersChange: setFilters,
     onColumnVisibilityChange: setColumnVisibility,
   });
 
   if (isLoading) return <div>Loading....</div>;
   if (isError) return <div>Error: {error.message}</div>;
+  console.log(data.data);
+  console.log(data.total);
+  //console.log(data.data[2].title)
 
   return (
     <div>
       <div className="inline-block border border-black shadow rounded">
         <div className="px-1 border-b border-black">
-          <label>
+          <label className="className">
             <input
               type="checkbox"
               checked={table.getIsAllColumnsVisible()}
               onChange={table.getToggleAllColumnsVisibilityHandler()}
             />
-            Toggle All
+            Toggle All Or None
           </label>
         </div>
         {table.getAllLeafColumns().map((column) => (
@@ -149,26 +157,36 @@ const BasicTable = () => {
           </div>
         ))}
       </div>
-
       <table className="min-w-full border-collapse border border-gray-300">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id} className="bg-gray-200">
               {headerGroup.headers.map((header) => (
-                <th key={header.id} className="border border-gray-300 px-4 py-2">
-                  {flexRender(header.column.columnDef.header, header.getContext())}
+                <th
+                  key={header.id}
+                  className="border border-gray-300 px-4 py-2"
+                >
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
                   <div>
                     {header.column.getCanFilter() && (
                       <input
                         type="text"
-                        value={header.column.getFilterValue() || ''}
+                        value={header.column.getFilterValue() || ""}
                         onChange={(e) => {
                           header.column.setFilterValue(e.target.value);
                           setFilters((prevFilters) => {
                             const newFilters = [...prevFilters];
-                            const index = newFilters.findIndex((filter) => filter.id === header.column.id);
+                            const index = newFilters.findIndex(
+                              (filter) => filter.id === header.column.id
+                            );
                             if (index >= 0) {
-                              newFilters[index] = { ...newFilters[index], value: e.target.value };
+                              newFilters[index] = {
+                                ...newFilters[index],
+                                value: e.target.value,
+                              };
                             }
                             return newFilters;
                           });
@@ -240,15 +258,6 @@ const BasicTable = () => {
 };
 
 export default BasicTable;
-
-
-
-
-
-
-
-
-
 
 /*import React, { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -482,14 +491,6 @@ export default BasicTable;
 
 */
 
-
-
-
-
-
-
-
-
 /*import React, { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -719,5 +720,3 @@ const BasicTable = () => {
 export default BasicTable;
 
 */
-
-

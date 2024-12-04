@@ -43,3 +43,218 @@ const [searchTerm, setSearchTerm] = useState('');
     className="mt-2 w-full px-2 py-1 border rounded"
   />
 )}
+
+
+
+
+**************************************************
+// AuthContext
+
+/context
+  ├── AuthContext.js
+  └── App.js
+
+
+AuthContext.js
+
+import React, { createContext, useState, useContext } from 'react';
+
+// 1. Create the AuthContext
+const AuthContext = createContext();
+
+// 2. Create the Provider component
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+
+  // Function to handle user login
+  const login = (userData) => {
+    setUser(userData);
+  };
+
+  // Function to handle user logout
+  const logout = () => {
+    setUser(null);
+  };
+
+  // Pass user, login, and logout functions to the context
+  return (
+    <AuthContext.Provider value={{ user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+// 3. Custom hook for consuming the AuthContext
+export const useAuth = () => {
+  return useContext(AuthContext);
+};
+
+App.js
+
+import React from 'react';
+import { AuthProvider, useAuth } from './context/AuthContext';
+
+function LoginButton() {
+  const { login } = useAuth();
+  return (
+    <button onClick={() => login({ name: 'John Doe' })}>Log In</button>
+  );
+}
+
+function LogoutButton() {
+  const { logout } = useAuth();
+  return (
+    <button onClick={logout}>Log Out</button>
+  );
+}
+
+function UserInfo() {
+  const { user } = useAuth();
+  return (
+    <div>
+      {user ? <p>Welcome, {user.name}!</p> : <p>Please log in.</p>}
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <UserInfo />
+      <LoginButton />
+      <LogoutButton />
+    </AuthProvider>
+  );
+}
+
+export default App;
+
+***************************************************
+
+//utils 
+==>Functions that perform small, 
+reusable tasks across the application.
+
+/ utils/formatDate.js
+
+export const formatDate = (date) => {
+  return new Date(date).toLocaleDateString();
+};
+
+==>API Utility Functions Centralized API request functions
+ for handling network calls.
+
+// utils/api.js
+export const fetchData = async (url) => {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("Failed to fetch");
+  return response.json();
+};
+
+==>
+Constants Store shared constants like API endpoints,
+ configuration values, or action types
+
+ // utils/constants.js
+export const API_BASE_URL = "https://api.example.com";
+
+
+
+*************************************
+
+>src 
+ >assests
+ >components
+ >context
+ >data
+ >hooks
+ >pages
+ >utils
+ >assests
+ >components
+ >services
+ 
+ *****************************
+ >pages
+   HomeScreen.jsx
+   LoginScreen.jsx
+   DashBoardScreen.jsx
+ >components
+   Button.jsx
+   Modals.jsx
+   Form.jsx
+   TextInput.jsx
+X  DeleteAccount.jsx
+   
+   ******************************
+   import React, { useState } from 'react';
+
+function UserProfile() {
+  // Initialize state with an object
+  const [user, setUser] = useState({
+    name: 'Vikram',
+    age: 25,
+    email: 'vikram@example.com'
+  });
+
+  // Update a specific field of the object
+  const updateEmail = () => {
+    setUser({ ...user, email: 'newemail@example.com' });
+  };
+
+  return (
+    <div>
+      <h1>User Profile</h1>
+      <p>Name: {user.name}</p>
+      <p>Age: {user.age}</p>
+      <p>Email: {user.email}</p>
+      <button onClick={updateEmail}>Update Email</button>
+    </div>
+  );
+}
+
+export default UserProfile;
+
+ *********************************
+
+ const [user, setUser] = useState({ name: 'John', age: 25, city: 'New York' });
+
+// Update only the age
+const updateAge = () => {
+  setUser(prevUser => ({ ...prevUser, age: 26 }));
+};
+    
+
+const [items, setItems] = useState([1, 2, 3]);
+
+// Add a new item to the array
+const addItem = () => {
+  setItems(prevItems => [...prevItems, 4]);
+};
+
+
+// Remove the last item from the array
+const removeLastItem = () => {
+  setItems(prevItems => prevItems.slice(0, -1));
+};
+
+
+//const [count, setCount] = useState(0);
+
+const handleClick = () => {
+  setCount((prevCount) => prevCount + 1); // Always works with the most up-to-date state
+};
+
+//const [count, setCount] = useState(0);
+
+const handleClick = () => {
+  setCount(count + 1); // This will use the outdated 'count' state
+};
+
+
+****************************
+
+/api/products?page=1&limit=10&category=electronics&price_min=100&price_max=500&search=laptop
+
+
+

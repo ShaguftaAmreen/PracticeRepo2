@@ -48,8 +48,8 @@ const TanStackTable = () => {
       getCoreRowModel: getCoreRowModel(),
       getSortedRowModel: getSortedRowModel(),
     });
-  
-
+    //  console.log("asdfghnjm")
+    // console.log("fghhjkjkjjkgjjhj"+table.data)
   return(
     <div>
     <h1 className="text-lg font-bold mb-4">TanStack React Table Example</h1>
