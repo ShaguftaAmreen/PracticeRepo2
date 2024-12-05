@@ -12,6 +12,7 @@ import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import toast, { Toaster } from 'react-hot-toast';
+import { useToast } from "./useToast"; 
 
 
 const fetchProducts = async () => {
@@ -20,36 +21,15 @@ const fetchProducts = async () => {
 };
 
 const Products = ({ cartItems, onAddToCart, onRemoveFromCart, onUpdateQuantity }) => {
-  
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["products"],
-    queryFn: fetchProducts,
-    staleTime: 20000,
-  });
+//   const { data, isLoading, isError, error } = useQuery({
+//     queryKey: ["products"],
+//     queryFn: fetchProducts,
+//     staleTime: 20000,
+//   });
 
-  
-  React.useEffect(() => {
-    
-    if (isLoading) {
-      toast.loading('Loading products...');
-    }
+const {data}=useToast(fetchProducts);
+ // useToast(fetchProducts);
 
-    
-    if (data || isError) {
-      toast.dismiss();
-    }
-
-    
-    if (isError) {
-      toast.error(`Error fetching products: ${error.message}`);
-    }
-
-    if (data) {
-      toast.success('Products loaded successfully!');
-    }
-  }, [isLoading, isError, data, error]);
-
-  
   const getProductQuantity = (productId) => {
     const product = cartItems.find((item) => item.id === productId);
     return product ? product.quantity : 0;
@@ -57,7 +37,6 @@ const Products = ({ cartItems, onAddToCart, onRemoveFromCart, onUpdateQuantity }
 
   return (
     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, padding: 2 }}>
-      
       {data?.products?.map((product) => (
         <Card
           key={product.id}
@@ -132,3 +111,23 @@ const Products = ({ cartItems, onAddToCart, onRemoveFromCart, onUpdateQuantity }
 };
 
 export default Products;
+
+
+
+
+
+//   React.useEffect(() => {
+//     const myPromise = fetchProducts();
+
+//     toast.promise(myPromise, {
+//       loading: 'Loading products...',
+//     //   success: 'Got the products data!',
+//     success:(res)=> "got the products data"
+//       ,error: `Error when fetching: ${error?.message}`,
+//     });
+//   }, [isLoading, isError, data, error]);
+
+
+
+
+

@@ -8,7 +8,7 @@ const fetchData = async () => {
   return response.data; 
 };
 
-const App = () => {
+const ToastPromise = () => {
   const [data, setData] = useState([]);
 
   
@@ -42,4 +42,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default ToastPromise;

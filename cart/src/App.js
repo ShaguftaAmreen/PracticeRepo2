@@ -5,14 +5,16 @@ import './App.css';
 import Header from './components/Header';
 import AllRoutes from './components/AllRoutes';
 import ToastPromise from './components/ToastPromise';
+import UseToastExample from './components/UseToastExample';
 
 function App() {
   return (
     <div className="App">
       <Header />
-      <AllRoutes />
+       <AllRoutes />
      {/* <Products /> */}
      {/* <ToastPromise /> */}
+     {/* <UseToastExample /> */}
     </div>
   );
 }
