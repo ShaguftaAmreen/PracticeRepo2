@@ -1,0 +1,32 @@
+/your-project
+├── /public
+│   └── index.html
+├── /src
+│   ├── /components
+│   │   ├── /Cart
+│   │   │   └── Cart.jsx
+│   │   ├── /Products
+│   │   │   └── Products.jsx
+│   │   └── Shared  // For reusable UI components
+│   │       ├── Navbar.jsx
+│   │       └── Footer.jsx
+│   ├── /hooks
+│   │   └── useCart.js
+│   ├── /pages  // For route-specific components
+│   │   ├── Home.jsx
+│   │   └── CartPage.jsx
+│   ├── /services
+│   │   └── api.js  // Axios instance or API-related functions
+│   ├── /styles  // For global and component-specific styles
+│   │   ├── index.css
+│   │   └── theme.js  // If you're using Material-UI custom theme
+│   ├── /utils  // Helper functions, constants, or utilities
+│   │   └── formatCurrency.js
+│   ├── App.jsx
+│   ├── index.jsx
+│   └── /routes
+│       └── AllRoutes.jsx
+├── .env  // Environment variables
+├── .gitignore
+├── package.json
+└── README.md

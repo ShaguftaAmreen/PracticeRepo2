@@ -129,9 +129,7 @@ const BasicTable = () => {
   if (isError) return <div>Error: {error.message}</div>;
   console.log(data.data);
   console.log(data.total);
-  //console.log(data.data[2].title)
-
-  return (
+return (
     <div>
       <div className="inline-block border border-black shadow rounded">
         <div className="px-1 border-b border-black">
