@@ -1,0 +1,284 @@
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+
+// Axios-based fetch function with async/await
+const fetchData = async (url, queryKey) => {
+  const response = await axios.get(url, {
+    params: queryKey, // Can be additional params like search terms, filters, etc.
+  });
+  return response.data; // Axios automatically parses JSON
+};
+
+const useFetch = (url, queryKey) => {
+  // Dynamic queryKey based on the URL and additional params (e.g., search term)
+  const { data, error, isLoading } = useQuery([url, queryKey], () => fetchData(url, queryKey));
+
+  return { data, loading: isLoading, error };
+};
+
+export default useFetch;
+
+
+****************** 1. Custom Hook for Fetching Data (useFetch)
+
+****************** 2. Custom Hook for Debouncing (useDebounce)
+
+// src/hooks/useDebounce.js
+import { useState, useEffect } from 'react';
+
+const useDebounce = (value, delay = 500) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    // Delay updating the debounced value until the user stops typing
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    // Cleanup the timer on value or delay change
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+
+  return debouncedValue;
+};
+
+export default useDebounce;
+
+
+***********************
+
+// src/hooks/useFetch.js
+import { useQuery } from '@tanstack/react-query'; // React Query hook
+import axios from 'axios'; // Axios for API requests
+
+// Axios function to fetch users from the API
+const fetchUsers = async (searchTerm) => {
+  const response = await axios.get('https://jsonplaceholder.typicode.com/users', {
+    params: {
+      name: searchTerm, // Filtering by name
+    },
+  });
+  return response.data; // Return the data fetched from the API
+};
+
+const useFetch = (searchTerm) => {
+  const { data, isLoading, error } = useQuery(
+    ['users', searchTerm], // Unique query key based on search term
+    () => fetchUsers(searchTerm), // Fetch data with Axios
+    {
+      enabled: searchTerm.length > 0, // Only enable query if there's a search term
+    }
+  );
+
+  return { data, loading: isLoading, error };
+};
+
+export default useFetch;
+
+
+************* 
+
+// src/components/SearchComponent.js
+import React, { useState } from 'react';
+import useDebounce from '../hooks/useDebounce'; // Import custom hook for debouncing
+import useFetch from '../hooks/useFetch'; // Import custom hook for fetching data
+
+const SearchComponent = () => {
+  const [searchTerm, setSearchTerm] = useState(''); // Manage search term state
+  const debouncedSearchTerm = useDebounce(searchTerm, 500); // Debounced value
+
+  // Fetch data using the debounced search term
+  const { data, loading, error } = useFetch(debouncedSearchTerm);
+
+  const handleChange = (e) => {
+    setSearchTerm(e.target.value); // Update search term on input change
+  };
+
+  return (
+    <div>
+      <h2>Search for Users</h2>
+      <input
+        type="text"
+        value={searchTerm}
+        onChange={handleChange}
+        placeholder="Search by name..."
+      />
+
+      {/* Show loading message */}
+      {loading && <div>Loading...</div>}
+
+      {/* Show error message */}
+      {error && <div style={{ color: 'red' }}>Error: {error.message}</div>}
+
+      {/* Display the fetched user data */}
+      <div>
+        {data && data.length > 0 ? (
+          data.map((user) => <p key={user.id}>{user.name}</p>) // Display user names
+        ) : (
+          <p>No users found</p> // No results found
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default SearchComponent;
+
+****************** 3. Local Storage Hook (useLocalStorage)
+
+import { useState } from 'react';
+
+const useLocalStorage = (key, initialValue) => {
+  const [storedValue, setStoredValue] = useState(() => {
+    try {
+      const item = window.localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      return initialValue;
+    }
+  });
+
+  const setValue = (value) => {
+    try {
+      setStoredValue(value);
+      window.localStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+      console.error("Error setting localStorage", error);
+    }
+  };
+
+  return [storedValue, setValue];
+};
+
+export default useLocalStorage;
+
+*******************
+
+import React, { useState } from 'react';
+import useLocalStorage from '../hooks/useLocalStorage'; // Import the custom hook
+
+const LocalStorageExample = () => {
+  const [name, setName] = useLocalStorage('userName', ''); // Use the custom hook
+  const [inputValue, setInputValue] = useState(name); // Local state for the input field
+
+  const handleSave = () => {
+    setName(inputValue); // Save the input value to local storage
+  };
+
+  return (
+    <div>
+      <h2>Local Storage Example</h2>
+      <div>
+        <label>
+          Enter your name:
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+        </label>
+        <button onClick={handleSave}>Save to Local Storage</button>
+      </div>
+
+      <div style={{ marginTop: '20px' }}>
+        <h3>Stored Name:</h3>
+        {name ? <p>{name}</p> : <p>No name stored yet.</p>}
+      </div>
+    </div>
+  );
+};
+
+export default LocalStorageExample;
+
+
+******************** 4. Custom Hook for Handling Forms (useForm)
+
+
+import { useState } from 'react';
+
+const useForm = (initialState) => {
+  const [values, setValues] = useState(initialState);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setValues((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const resetForm = () => setValues(initialState);
+
+  return { values, handleChange, resetForm };
+};
+
+export default useForm;
+
+******************* 
+
+import React from 'react';
+import useForm from './useForm';
+
+const MyForm = () => {
+  const { values, handleChange, resetForm } = useForm({ name: '', email: '' });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(values); // Logs the current form values
+    resetForm(); // Resets the form
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        name="name"
+        value={values.name}
+        onChange={handleChange}
+        placeholder="Name"
+      />
+      <input
+        name="email"
+        value={values.email}
+        onChange={handleChange}
+        placeholder="Email"
+      />
+      <button type="submit">Submit</button>
+    </form>
+  );
+};
+
+export default MyForm;
+
+******************* 5. Component for Handling API Requests
+
+import React, { useEffect, useState } from 'react';
+
+const ApiRequest = ({ url }) => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(url);
+        const result = await response.json();
+        setData(result);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [url]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+  return <div>{JSON.stringify(data)}</div>;
+};
+
+export default ApiRequest;
+
+
+******************* 
+npm install web-vitals@^2.1.0 --save
+

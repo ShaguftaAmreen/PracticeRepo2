@@ -48,6 +48,7 @@ const TanStackTable = () => {
       getCoreRowModel: getCoreRowModel(),
       getSortedRowModel: getSortedRowModel(),
     });
+    console.log("data");
     //  console.log("asdfghnjm")
     // console.log("fghhjkjkjjkgjjhj"+table.data)
   return(
