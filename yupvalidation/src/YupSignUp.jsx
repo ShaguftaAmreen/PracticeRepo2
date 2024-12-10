@@ -26,14 +26,14 @@ const schema = Yup.object({
       .required('Required'),
     dateOfBirth: Yup.date()
       .max(new Date(), 'Date of birth must not be in the future')
-      .test('age', 'You must be at least 18 years old', (value) => {
-        const today = new Date();
-        const birthDate = new Date(value);
-        const age = today.getFullYear() - birthDate.getFullYear();
-        const monthDiff = today.getMonth() - birthDate.getMonth();
-        // Check if the person is at least 18 years old
-        return age > 18 || (age === 18 && monthDiff >= 0);
-      })
+    //   .test('age', 'You must be at least 18 years old', (value) => {
+    //     const today = new Date();
+    //     const birthDate = new Date(value);
+    //     const age = today.getFullYear() - birthDate.getFullYear();
+    //     const monthDiff = today.getMonth() - birthDate.getMonth();
+    //     // Check if the person is at least 18 years old
+    //     return age > 18 || (age === 18 && monthDiff >= 0);
+     // })
       .required('Required'),
     phoneNumber: Yup.string()
       .matches(/^\d{10}$/, 'Phone number must be exactly 10 digits')
@@ -56,11 +56,12 @@ const schema = Yup.object({
       dateOfBirth: '',
       phoneNumber: '',
       acceptTerms: false,
-    }, // Provide default values for all fields
+    }
   });
 
   const onSubmit = (data) => {
-    alert("Form Submitted successfully!",data);
+    console.log("data",data)
+    alert(`Form Submitted successfully! ${data.phoneNumber}`);
   };
 
   return (
@@ -80,7 +81,7 @@ const schema = Yup.object({
 
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* Username */}
-        <Controller
+        <Controller 
           name="userName"
           control={control}
           render={({ field }) => (
