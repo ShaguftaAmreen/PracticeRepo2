@@ -2,6 +2,7 @@
 import './App.css';
 import BasicTable from './components/BasicTable';
 import TanStackTable from './components/TanStackTable';
+import WithOutFiltering from './WithOutFiltering'
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
     <h3>Basic Table</h3>
     <BasicTable />
     {/* <TanStackTable /> */}
+    {/* <WithOutFiltering /> */}
     </div>
   );
 }

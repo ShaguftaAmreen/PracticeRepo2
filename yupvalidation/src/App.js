@@ -7,9 +7,9 @@ function App() {
   return (
     <div className="App">
  {/* <YupLogin /> */}
- {/* <YupSignUp /> */}
+ <YupSignUp />
  {/* <Example /> */}
- <SelectYup />
+ {/* <SelectYup /> */}
     </div>
   );
 }

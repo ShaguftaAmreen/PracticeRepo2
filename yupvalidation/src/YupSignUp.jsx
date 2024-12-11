@@ -35,6 +35,8 @@ const schema = Yup.object({
     //     return age > 18 || (age === 18 && monthDiff >= 0);
      // })
       .required('Required'),
+
+
     phoneNumber: Yup.string()
       .matches(/^\d{10}$/, 'Phone number must be exactly 10 digits')
       .required('Required'),
@@ -84,7 +86,9 @@ const schema = Yup.object({
         <Controller 
           name="userName"
           control={control}
-          render={({ field }) => (
+          render={({ field,fieldState:{error,isTouched},formState:{touchedFields} }) => (
+            <>
+            {console.log("field State",touchedFields)}
             <TextField
               {...field}
               label="Username"
@@ -92,7 +96,7 @@ const schema = Yup.object({
               margin="normal"
               error={!!errors.userName}
               helperText={errors.userName ? errors.userName.message : ''}
-            />
+            />   </>
           )}
         />
 
